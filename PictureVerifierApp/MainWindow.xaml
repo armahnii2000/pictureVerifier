@@ -1,0 +1,77 @@
+﻿<Window x:Class="PictureVerifierApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PictureVerifierApp"
+        mc:Ignorable="d"
+        Title="BatchQuery Chatbot for Image Analysis" Height="700" Width="900"
+        Background="#FAFAFA">
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Chat Area -->
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Background="#FAFAFA" Margin="0,0,0,0">
+            <StackPanel Name="ChatStackPanel" Margin="0,30,0,0"/>
+        </ScrollViewer>
+
+        <!-- Bottom controls: thumbnails, drag-and-drop, prompt input -->
+        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,40">
+            <!-- Image Thumbnails with upload status and progress bar -->
+            <Border Background="#FAFAFA" Padding="0,0,0,0">
+                <ItemsControl Name="ThumbnailItemsControl" Margin="0,0,0,0" Height="120" VerticalAlignment="Bottom">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="8,0" Width="100" Height="100">
+                                <Border BorderBrush="#DDD" BorderThickness="1" CornerRadius="8" Background="#FFF" Width="100" Height="100">
+                                    <Image Source="{Binding Image}" Stretch="UniformToFill" Width="100" Height="100" AllowDrop="False"/>
+                                </Border>
+                                <!-- Progress Bar Overlay -->
+                                <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" Height="8" VerticalAlignment="Bottom" Margin="8,0,8,8" Visibility="{Binding ProgressBarVisibility}"/>
+                                <!-- Status Icon (bottom-right) -->
+                                <TextBlock Text="{Binding StatusIcon}" FontSize="22" FontWeight="Bold" Foreground="{Binding StatusColor}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,8,8"/>
+                                <!-- X Button (top-right) -->
+                                <Button Content="✕" Width="22" Height="22" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0" Click="RemoveThumbnail_Click" Tag="{Binding}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+            <!-- Drag-and-drop/upload area -->
+            <Border Background="#801976D2" CornerRadius="16" Margin="120,0,120,8" Padding="16,8" Height="220" AllowDrop="True" Drop="PromptArea_Drop" DragOver="PromptArea_DragOver" DragLeave="PromptArea_DragLeave" MouseLeftButtonUp="UploadArea_Click">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Click here or Drag and Drop images for analysis (max 4)" Foreground="White" FontSize="20" FontWeight="Bold" TextAlignment="Center"/>
+                        <TextBlock Text="Supported: JPG, PNG, BMP, GIF" Foreground="#E3F2FD" FontSize="14" TextAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <!-- Prompt Area -->
+            <Border Background="#FFF" CornerRadius="20" Margin="120,0,120,0" Padding="20,10">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.15"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- + Button -->
+                    <Button Name="UploadButton" Grid.Column="0" Content="+" Width="36" Height="32" FontSize="22" Margin="0,0,10,0" Click="UploadButton_Click"/>
+                    <!-- Prompt TextBox -->
+                    <TextBox Name="QueryTextBox" Grid.Column="1" Height="32" FontSize="16" VerticalContentAlignment="Center" BorderThickness="1" BorderBrush="#DDD" Background="#FAFAFA" Margin="0" Padding="8,0"/>
+                    <!-- Ask Button -->
+                    <Button Content="Ask" Grid.Column="2" Width="60" Height="32" Margin="10,0,0,0" Click="AskButton_Click"/>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>
